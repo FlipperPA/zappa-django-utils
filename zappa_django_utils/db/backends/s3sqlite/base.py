@@ -1,4 +1,4 @@
-from django.db.backends.sqlite3.base import DatabaseWrapper
+from django.db.backends.sqlite3.base import DatabaseWrapper, SQLiteCursorWrapper
 
 from io import BytesIO
 
@@ -80,3 +80,25 @@ class DatabaseWrapper(DatabaseWrapper):
             logging.debug(e)
 
         logging.debug("Saved to remote DB!")
+
+
+class SQLiteCursorWrapper(SQLiteCursorWrapper):
+    def execute(self, query, params=None):
+        result = super(SQLiteCursorWrapper, self).execute(query, params=None)
+
+        from pprint import pprint
+        print('SELF')
+        pprint(dir(self))
+        print('\n\nQUERY')
+        pprint(dir(query))
+        print('\n\nRESULT')
+        pprint(dir(result))
+        print(result)
+        print(query[0][0:6])
+        return result
+        """
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+        return Database.Cursor.execute(self, query, params)
+        """
